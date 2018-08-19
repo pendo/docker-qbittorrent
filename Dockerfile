@@ -35,7 +35,12 @@ RUN \
 	boost-system \
 	boost-thread \
 	ca-certificates \
+	dos2unix \
+	ipcalc \	
+	iptables \
 	geoip \
+	kmod \
+	net-tools \
 	qt5-qtbase \
 	unrar && \
  echo "**** compile libtorrent rasterbar ****" && \
@@ -76,7 +81,16 @@ RUN \
 
 # add local files
 COPY root/ /
+COPY openvpn/ /etc/openvpn/
+COPY qbittorrent/ /etc/qbittorrent/
 
-# ports and volumes
-EXPOSE 6881 6881/udp 8080
+
+RUN chmod +x /etc/qbittorrent/*.sh /etc/qbittorrent/*.init /etc/openvpn/*.sh
+
+
+
+# Expose ports, volumes and run
+EXPOSE 6881 6881/udp 8990
 VOLUME /config /downloads
+CMD ["/bin/bash", "/etc/openvpn/start.sh"]
+
